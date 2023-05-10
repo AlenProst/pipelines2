@@ -1,0 +1,28 @@
+trigger:
+- none
+
+resources:
+  repositories:
+  - repository: alenprost
+    type: github
+    endpoint: MyGitHubServiceConnection
+    name: alenprost/pipelines2
+    ref: main
+
+
+steps:
+- task: Docker@2
+  inputs:
+    containerRegistry: 'docker_hub_connection'
+    repository: 'alenprost/pipeline_images'
+    command: 'build'
+    Dockerfile: 'Dockerfile'
+    buildContext: '$(System.DefaultWorkingDirectory)'
+    arguments: '--no-cache'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'docker_hub_connection'
+    repository: 'alenprost/pipeline_images'
+    command: 'push'
+    Dockerfile: 'Dockerfile'
+    buildContext: '$(System.DefaultWorkingDirectory)'
